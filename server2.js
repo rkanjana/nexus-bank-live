@@ -45,6 +45,11 @@ app.use(session({
 // Serve static files from the "public" directory
 app.use(express.static("public"));
 
+// Make the generated deployment domain open the public landing page directly.
+app.get("/", (_req, res) => {
+    res.sendFile(path.join(__dirname, "public", "mainpage.html"));
+});
+
 // Connect to MySQL
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
