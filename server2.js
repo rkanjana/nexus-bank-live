@@ -109,7 +109,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // Generate and send OTP
-app.post('/send-otp', (req, res) => {
+app.post('/send-otp', async (req, res) => {
     const { email } = req.body;
     if (!email) return res.status(400).json({ error: "Email is required" });
 
@@ -120,20 +120,32 @@ app.post('/send-otp', (req, res) => {
         delete otpStore[email]; // OTP expires in 5 minutes
     }, 5 * 60 * 1000);
 
-    const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: "Your OTP for Login",
-        text: `Your OTP is: ${otp}. It is valid for 5 minutes.`
-    };
+    // const mailOptions = {
+    //     from: process.env.EMAIL_USER,
+    //     to: email,
+    //     subject: "Your OTP for Login",
+    //     text: `Your OTP is: ${otp}. It is valid for 5 minutes.`
+    // };
 
-    transporter.sendMail(mailOptions, (error, info) => {
+    try {
+        const { data, error } = await resend.emails.send({
+            from: 'Nexus Bank <onboarding@resend.dev>',
+            to: [email],
+            subject: 'Your OTP for Login',
+            text: `Your OTP is: ${otp}. It is valid for 5 minutes.`
+        });
+
         if (error) {
             console.error("Error sending OTP:", error);
             return res.status(500).json({ error: "Failed to send OTP" });
         }
+
         res.json({ message: "OTP sent successfully!" });
-    });
+
+    } catch (error) {
+        console.error("Error sending OTP:", error);
+        res.status(500).json({ error: "Failed to send OTP" });
+    }
 });
 
 // Verify OTP, create the account, and store a HASHED password
