@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS Bank - Employee</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a237e, #0d47a1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .heading {
+            font-size: 42px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 30px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            backdrop-filter: blur(10px);
+        }
+
+        .login-container h1 {
+            margin-bottom: 30px;
+            font-size: 28px;
+            color: #1a237e;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .bank-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            display: block;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-container {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .input-container i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #1a237e;
+        }
+
+        .input-container input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .input-container input:focus {
+            border-color: #1a237e;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+        }
+
+        .login-container button {
+            width: 100%;
+            padding: 15px;
+            background: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .login-container button:hover {
+            background: #0d47a1;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(13, 71, 161, 0.3);
+        }
+
+        .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #1a237e;
+        }
+
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            text-align: center;
+            width: 350px;
+            margin: 15% auto;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-content p {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            background: #1a237e;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: #0d47a1;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                width: 100%;
+                padding: 30px 20px;
+            }
+            
+            .heading {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="heading">NEXUS Bank</div>
+
+    <div class="login-container">
+        <img src="pics/WhatsApp Image 2025-02-26 at 10.00.20_5af40025.jpg" alt="Bank Logo" class="bank-logo">
+        <h1>Employee Login</h1>
+        <form>
+            <div class="input-container">
+                <i class="fas fa-user"></i>
+                <input type="text" class="emp-number" placeholder="Employee ID" required>
+            </div>
+            <div class="input-container">
+                <i class="fas fa-lock"></i>
+                <input type="password" class="password" placeholder="Password" required>
+            </div>
+            <div class="options">
+                <label class="remember-me">
+                    <input type="checkbox">
+                    Remember Me
+                </label>
+            </div>
+            <button type="submit">Sign In</button>
+        </form>
+    </div>
+
+    <!-- Modal for Incorrect Login -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content">
+            <p><i class="fas fa-exclamation-circle" style="color: #1a237e; font-size: 24px; margin-bottom: 15px;"></i><br>
+            Incorrect Employee ID or Password!</p>
+            <button class="close-btn">Close</button>
+        </div>
+    </div>
+
+    <script>
+    document.querySelector("form").addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const emp_id = document.querySelector(".emp-number").value;
+        const password = document.querySelector(".password").value;
+
+        const response = await fetch("/employee-login", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ emp_id, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert(data.message);
+            localStorage.setItem("employee", JSON.stringify(data.employee));
+            window.location.href = "emplyeepage.html";
+        } else {
+            document.getElementById("errorModal").style.display = "block";
+        }
+    });
+
+    // Close modal when clicking the close button
+    document.querySelector(".close-btn").addEventListener("click", function() {
+        document.getElementById("errorModal").style.display = "none";
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener("click", function(event) {
+        const modal = document.getElementById("errorModal");
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+    </script>
+</body>
+</html>

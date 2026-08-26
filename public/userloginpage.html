@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Login — NEXUS Bank</title>
+    <link rel="stylesheet" href="css/nexus-theme.css">
+</head>
+<body>
+    <div class="nx-auth-wrap">
+        <div class="nx-auth-card">
+            <div class="nx-brand"><span class="nx-mark">N</span> NEXUS Bank</div>
+            <h2>Customer Login</h2>
+            <p class="nx-sub">Access your account securely</p>
+
+            <form id="loginForm">
+                <div class="nx-field">
+                    <label for="account_number">Account Number</label>
+                    <input type="text" id="account_number" name="account_number" required autocomplete="username">
+                </div>
+                <div class="nx-field">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="nx-btn nx-btn-primary nx-btn-block" id="loginBtn">Login</button>
+                <div class="nx-alert" id="message"></div>
+            </form>
+
+            <div class="nx-auth-links">
+                <a href="login.html">← Back to portal selection</a> &nbsp;·&nbsp;
+                <a href="aboutacc.html">Open an account</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const account_number = document.getElementById("account_number").value.trim();
+            const password = document.getElementById("password").value;
+            const btn = document.getElementById("loginBtn");
+            const messageEl = document.getElementById("message");
+
+            btn.disabled = true;
+            btn.textContent = "Signing in…";
+            messageEl.className = "nx-alert";
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ account_number, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.message === 'Login successful') {
+                    window.location.href = "useraccount.html";
+                } else {
+                    messageEl.textContent = data.message || "Login failed";
+                    messageEl.className = "nx-alert nx-alert-error show";
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                messageEl.textContent = "Something went wrong. Please try again.";
+                messageEl.className = "nx-alert nx-alert-error show";
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Login";
+            }
+        });
+    </script>
+</body>
+</html>

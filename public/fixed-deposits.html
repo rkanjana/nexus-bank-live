@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixed Deposits — NEXUS Bank</title>
+    <link rel="stylesheet" href="css/nexus-theme.css">
+</head>
+<body>
+    <div class="nx-app">
+        <aside class="nx-sidebar" id="nx-sidebar-mount"></aside>
+        <main class="nx-main">
+            <div class="nx-topbar"><h1>Fixed Deposits</h1></div>
+            <div class="nx-content">
+                <div class="nx-card">
+                    <h3 class="nx-mt-0">Open a new Fixed Deposit</h3>
+                    <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end;">
+                        <div class="nx-field" style="flex:1; min-width:160px; margin-bottom:0;">
+                            <label for="fdAmount">Amount (₹)</label>
+                            <input type="number" id="fdAmount" min="500" placeholder="e.g. 50000">
+                        </div>
+                        <div class="nx-field" style="flex:1; min-width:160px; margin-bottom:0;">
+                            <label for="fdTenure">Tenure (months)</label>
+                            <select id="fdTenure">
+                                <option value="3">3 months — 4.5% p.a.</option>
+                                <option value="9">9 months — 5.5% p.a.</option>
+                                <option value="18" selected>18 months — 6.5% p.a.</option>
+                                <option value="36">36 months — 7.25% p.a.</option>
+                            </select>
+                        </div>
+                        <button class="nx-btn nx-btn-primary" id="openFdBtn" style="height:44px;">Open FD</button>
+                    </div>
+                    <p class="nx-muted" id="fdPreview" style="font-size:13px; margin-top:10px;"></p>
+                    <div class="nx-alert" id="fdMessage"></div>
+                </div>
+
+                <div class="nx-card">
+                    <h3 class="nx-mt-0">Your Fixed Deposits</h3>
+                    <table class="nx-table">
+                        <thead>
+                            <tr><th>Principal</th><th>Rate</th><th>Tenure</th><th>Matures</th><th>Maturity Amt</th><th>Status</th><th></th></tr>
+                        </thead>
+                        <tbody id="fdTable"></tbody>
+                    </table>
+                    <div class="nx-empty-state" id="emptyState" style="display:none;">No fixed deposits yet.</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/nexus-app.js"></script>
+    <script>
+        nxRenderSidebar();
+        loadFDs();
+        updatePreview();
+
+        document.getElementById('fdAmount').addEventListener('input', updatePreview);
+        document.getElementById('fdTenure').addEventListener('change', updatePreview);
+        document.getElementById('openFdBtn').addEventListener('click', openFD);
+
+        function rateForTenure(months) {
+            if (months < 6) return 4.5;
+            if (months < 12) return 5.5;
+            if (months < 24) return 6.5;
+            return 7.25;
+        }
+
+        function updatePreview() {
+            const amount = parseFloat(document.getElementById('fdAmount').value) || 0;
+            const tenure = parseInt(document.getElementById('fdTenure').value);
+            const rate = rateForTenure(tenure);
+            const maturity = amount + (amount * rate * (tenure / 12) / 100);
+            document.getElementById('fdPreview').textContent = amount > 0
+                ? `At ${rate}% p.a. simple interest, this matures to ₹${nxFormatCurrency(maturity)} in ${tenure} months.`
+                : '';
+        }
+
+        async function openFD() {
+            const amount = parseFloat(document.getElementById('fdAmount').value);
+            const tenure_months = parseInt(document.getElementById('fdTenure').value);
+            const msgEl = document.getElementById('fdMessage');
+            msgEl.className = 'nx-alert';
+
+            if (!amount || amount <= 0) {
+                msgEl.textContent = 'Enter a valid amount';
+                msgEl.className = 'nx-alert nx-alert-error show';
+                return;
+            }
+
+            try {
+                const response = await nxApiFetch('/fixed-deposits', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount, tenure_months })
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Failed to open FD');
+
+                msgEl.textContent = `FD opened! Matures to ₹${nxFormatCurrency(data.maturity_amount)}.`;
+                msgEl.className = 'nx-alert nx-alert-success show';
+                document.getElementById('fdAmount').value = '';
+                updatePreview();
+                loadFDs();
+            } catch (error) {
+                msgEl.textContent = error.message;
+                msgEl.className = 'nx-alert nx-alert-error show';
+            }
+        }
+
+        async function loadFDs() {
+            const response = await nxApiFetch('/fixed-deposits');
+            const data = await response.json();
+            const tbody = document.getElementById('fdTable');
+            tbody.innerHTML = '';
+
+            if (!data.fixed_deposits || data.fixed_deposits.length === 0) {
+                document.getElementById('emptyState').style.display = 'block';
+                return;
+            }
+            document.getElementById('emptyState').style.display = 'none';
+
+            data.fixed_deposits.forEach(fd => {
+                const badgeClass = fd.status === 'Active' ? 'nx-badge-success'
+                    : fd.status === 'Matured' ? 'nx-badge-neutral' : 'nx-badge-warning';
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>₹${nxFormatCurrency(fd.principal)}</td>
+                    <td>${fd.interest_rate}%</td>
+                    <td>${fd.tenure_months} mo</td>
+                    <td>${nxFormatDate(fd.matures_at)}</td>
+                    <td>₹${nxFormatCurrency(fd.maturity_amount)}</td>
+                    <td><span class="nx-badge ${badgeClass}">${fd.status}</span></td>
+                    <td>${fd.status === 'Active' ? `<button class="nx-btn nx-btn-outline" style="padding:6px 12px;" onclick="closeFD(${fd.fd_id})">Close Early</button>` : ''}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        async function closeFD(id) {
+            if (!confirm('Closing early applies a penalty to the interest rate. Continue?')) return;
+            const response = await nxApiFetch(`/fixed-deposits/${id}/close`, { method: 'POST' });
+            const data = await response.json();
+            if (response.ok) {
+                alert(`FD closed. Payout: ₹${nxFormatCurrency(data.payout)}`);
+                loadFDs();
+            } else {
+                alert(data.error || 'Failed to close FD');
+            }
+        }
+    </script>
+</body>
+</html>

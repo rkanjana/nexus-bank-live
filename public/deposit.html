@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deposit Money | Nexus Bank</title>
+    <link rel="stylesheet" href="css/style1.css"> <!-- Link to external CSS -->
+    <script defer src="js/deposit.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Nexus Bank</h1>
+        <div class="deposit-box">
+            <h2>Deposit Money</h2>
+            <form id="depositForm">
+                <label for="emp_id">Employee ID:</label>
+                <input type="text" id="emp_id" required placeholder="Enter Employee ID">
+
+                <label for="account_number">Account Number:</label>
+                <input type="text" id="account_number" required placeholder="Enter Account Number">
+
+                <label for="amount">Deposit Amount:</label>
+                <input type="number" id="amount" required min="1" placeholder="Enter Amount">
+
+                <button type="submit" class="deposit-btn">Deposit</button>
+            </form>
+            <p id="message"></p>
+            <button class="back-btn" onclick="goBack()">⬅ Back</button>
+        </div>
+    </div>
+    
+    <script>
+        function goBack() {
+            window.history.back(); // Navigates to the previous page
+        }
+    </script>
+</body>
+</html>

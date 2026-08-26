@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - NEXUS Bank</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #eaf2f8; /* Light blue background */
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #163ac9; /* Blue header */
+            padding: 20px 0;
+            text-align: center;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 36px;
+            font-weight: 600;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .faq-container h2 {
+            text-align: center;
+            color: #007bff; /* Blue text for headings */
+            font-size: 32px;
+            margin-bottom: 30px;
+        }
+
+        .faq-item {
+            margin-bottom: 15px;
+        }
+
+        .faq-question {
+            cursor: pointer;
+            background: #d9e8f8; /* Light blue background for question */
+            padding: 15px;
+            margin-top: 5px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #004e92; /* Dark blue color for question */
+            transition: background 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: #007bff; /* Hover effect for questions */
+            color: white;
+        }
+
+        .faq-answer {
+            display: none;
+            padding: 15px;
+            background: #ffffff;
+            border-left: 5px solid #007bff; /* Blue left border */
+            border-radius: 8px;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .feedback-box {
+            margin-top: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+
+        .feedback-box textarea {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            resize: vertical;
+        }
+
+        .feedback-box button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .feedback-box button:hover {
+            background-color: #0056b3;
+        }
+
+        footer {
+            background-color: #007bff;
+            padding: 20px 0;
+            text-align: center;
+            color: white;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>NEXUS Bank - FAQ</h1>
+</header>
+
+<div class="faq-container">
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleAnswer('faq1')">1. How do I apply for a loan?</div>
+        <div class="faq-answer" id="faq1">You can apply for a loan through your banking dashboard by filling out the loan request form.</div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleAnswer('faq2')">2. What is the minimum account balance?</div>
+        <div class="faq-answer" id="faq2">The minimum account balance required is ₹1000 for a savings account.</div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleAnswer('faq3')">3. How can I reset my password?</div>
+        <div class="faq-answer" id="faq3">Go to the login page and click on "Forgot Password" to reset your password.</div>
+    </div>
+
+    <div class="feedback-box">
+        <h3>Your Opinion</h3>
+        <textarea id="feedback-text" rows="4" cols="50" placeholder="Write your feedback here..."></textarea>
+        <br>
+        <button onclick="alert('Thank you for your feedback!')">Submit</button>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 NEXUS Bank. All Rights Reserved.</p>
+    <p>
+        <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+    </p>
+</footer>
+
+<script>
+    function toggleAnswer(id) {
+        let answer = document.getElementById(id);
+        answer.style.display = (answer.style.display === "block") ? "none" : "block";
+    }
+</script>
+
+</body>
+</html>

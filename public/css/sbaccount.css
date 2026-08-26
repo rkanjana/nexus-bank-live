@@ -1,0 +1,85 @@
+/* Blue-themed style */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background: #e3f2fd; /* light blue background */
+    color: #0d47a1; /* dark blue text */
+}
+
+form {
+    max-width: 600px;
+    margin: auto;
+    background: #ffffff;
+    border: 2px solid #90caf9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    color: #1565c0;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    border: 1px solid #90caf9;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #42a5f5;
+    box-shadow: 0 0 5px rgba(66, 165, 245, 0.5);
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-back {
+    background-color: #90caf9;
+}
+
+.btn-back:hover {
+    background-color: #64b5f6;
+}
+
+.btn-confirm {
+    background-color: #1565c0;
+}
+
+.btn-confirm:hover {
+    background-color: #0d47a1;
+}
+
+.btn-otp {
+    background-color: #1976d2;
+}
+
+.btn-otp:hover {
+    background-color: #1565c0;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard - Nexus Bank</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .sidebar {
+            width: 100px;
+            background: navy;
+            color: white;
+            height: 100vh;
+            padding: 15px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar h3 {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            flex-grow: 1;
+        }
+        .sidebar ul li {
+            padding: 8px;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .sidebar ul li span {
+            margin-right: 10px;
+        }
+        .sidebar ul li:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            width: 50%;
+            margin-left: 120px;
+            text-align: center;
+        }
+        .session-info {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: navy;
+            font-weight: bold;
+            display: flex;
+            gap: 15px;
+        }
+        h1, h2 {
+            color: navy;
+        }
+        .task-list {
+            text-align: left;
+            margin-top: 20px;
+        }
+        .task-list li {
+            background: #e0e0e0;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h3>Nexus Bank</h3>
+        <ul>
+            <li onclick="navigate('profile')"><span>👤</span> Profile</li>
+            <li onclick="navigate('loan-approvals')"><span>💰</span> Loans</li>
+            <li onclick="navigate('deposit')"><span>🛠️</span> Deposit</li>
+            <li onclick="navigate('account')"><span>🛠️</span> Accout creation</li>
+            <li onclick="navigate('time-off')"><span>⏳</span> Time Off</li>
+            <li onclick="logout()"><span>🚪</span> Logout</li>
+        </ul>
+    </div>
+
+    <div class="session-info">
+        <span id="emp-name1"></span>
+        <span id="session-time"></span>
+    </div>
+    
+    <div class="container" id="dashboard">
+        <h1>Nexus Bank</h1>
+        <h2 id="welcome-text">Welcome, <span id="emp-name"></span></h2>
+        <p id="designation-text">Designation: <strong id="emp-designation"></strong></p>
+        <h3 class="hidden" id="task-header">Current To-Do Tasks</h3>
+        <ul id="task-list" class="task-list hidden"></ul>
+        <p id="no-tasks" class="hidden">No current tasks</p>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async function() {
+            const employee = JSON.parse(localStorage.getItem("employee"));
+            if (!employee) {
+                window.location.href = "employeeloginpage.html";
+            }
+            document.getElementById("emp-name1").textContent = employee.name;
+            document.getElementById("emp-name").textContent = employee.name;
+            document.getElementById("emp-designation").textContent = employee.designation;
+
+            setTimeout(() => {
+                document.getElementById("welcome-text").classList.add("hidden");
+                document.getElementById("designation-text").classList.add("hidden");
+                document.getElementById("task-header").classList.remove("hidden");
+                document.getElementById("task-list").classList.remove("hidden");
+            }, 2000);
+
+            const defaultTasks = ["Payrolls", "Loan Approvals", "Meeting", "Target Check","Client meet"];
+            const taskList = document.getElementById("task-list");
+            
+            defaultTasks.forEach(task => {
+                let li = document.createElement("li");
+                li.textContent = task;
+                let btn = document.createElement("button");
+                btn.textContent = "✔";
+                btn.onclick = () => {
+                    li.remove();
+                    if (taskList.children.length === 0) {
+                        document.getElementById("no-tasks").classList.remove("hidden");
+                    }
+                };
+                li.appendChild(btn);
+                taskList.appendChild(li);
+            });
+
+            function updateSessionTime() {
+                const now = new Date();
+                document.getElementById("session-time").textContent = `Session Time: ${now.toLocaleTimeString()}`;
+            }
+            setInterval(updateSessionTime, 1000);
+            updateSessionTime();
+        });
+
+        function navigate(page) {
+            alert(`Navigating to ${page} page...`);
+        }
+
+        function logout() {
+            localStorage.removeItem("employee");
+            window.location.href = "employeeloginpage.html";
+        }
+        function navigate(page) {
+    if (page === "profile") {
+        window.location.href = "profile.html";
+    } 
+    else if(page == "time-off")
+    {
+        window.location.href = "manager.html";
+    }
+    else if(page == "deposit")
+    {
+        window.location.href = "deposit.html";
+    }
+    else if(page == "account")
+    {
+        window.location.href = "sbaccount.html";
+    }
+    
+    else {
+        alert(`Navigating to ${page} page...`);
+    }
+}
+
+
+    </script>
+</body>
+</html>

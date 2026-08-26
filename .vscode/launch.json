@@ -1,0 +1,11 @@
+{
+    "configurations": [
+
+        {
+            "type": "chrome",
+            "name": "NEXUS Bank",
+            "request": "launch",
+            "url": "http://127.0.0.1:3000/public/sbaccount.html"
+        }
+    ]
+}

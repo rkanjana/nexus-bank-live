@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Services - NEXUS Bank</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+        }
+
+        /* Navigation Bar */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0057b7;
+            padding: 15px 30px;
+            color: white;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+        }
+
+        /* Services Section */
+        .services {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .services h2 {
+            font-size: 36px;
+            color: #003366;
+            margin-bottom: 20px;
+        }
+
+        .service-boxes {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .service {
+            background: white;
+            width: 300px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .service:hover {
+            transform: scale(1.05);
+        }
+
+        .service i {
+            font-size: 40px;
+            color: #00509e;
+            margin-bottom: 10px;
+        }
+
+        .service h3 {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .service p {
+            font-size: 16px;
+            color: #555;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: #003366;
+            color: white;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <header>
+        <div class="logo">NEXUS Bank</div>
+        <nav>
+            <ul>
+                <li><a href="./test.html">Home</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="./loan.html">Loans</a></li>
+                <li><a href="./contact.html">Contact</a></li>
+                <li><a href="./userloginpage.html" class="login-btn">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Services Section -->
+    <section class="services">
+        <h2>Our Services</h2>
+        <div class="service-boxes">
+            <div class="service">
+                <i class="fas fa-university"></i>
+                <h3>Savings Accounts</h3>
+                <p>Secure and high-interest savings accounts to grow your wealth.</p>
+            </div>
+            <div class="service">
+                <i class="fas fa-wallet"></i>
+                <h3>Current Accounts</h3>
+                <p>Effortless banking for businesses and professionals.</p>
+            </div>
+            <div class="service">
+                <i class="fas fa-credit-card"></i>
+                <h3>Credit & Debit Cards</h3>
+                <p>Exclusive cards with rewards, cashback, and low interest.</p>
+            </div>
+            <div class="service">
+                <i class="fas fa-hand-holding-usd"></i>
+                <h3>Personal Loans</h3>
+                <p>Easy and quick loans with flexible repayment options.</p>
+            </div>
+            <div class="service">
+                <i class="fas fa-home"></i>
+                <h3>Home Loans</h3>
+                <p>Own your dream home with our low-interest home loans.</p>
+            </div>
+            <div class="service">
+                <i class="fas fa-car"></i>
+                <h3>Auto Loans</h3>
+                <p>Drive your dream car with affordable financing options.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 NEXUS Bank. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>

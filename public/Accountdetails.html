@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile — NEXUS Bank</title>
+    <link rel="stylesheet" href="css/nexus-theme.css">
+    <style>
+        .nx-profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+        .nx-detail-label { font-size: 12.5px; font-weight: 600; color: var(--nx-text-muted); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 4px; }
+        .nx-detail-value { padding: 10px 12px; background: var(--nx-bg); border-left: 3px solid var(--nx-blue-500); border-radius: 4px; font-size: 14.5px; }
+        @media (max-width: 700px) { .nx-profile-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="nx-app">
+        <aside class="nx-sidebar" id="nx-sidebar-mount"></aside>
+        <main class="nx-main">
+            <div class="nx-topbar"><h1>My Profile</h1></div>
+            <div class="nx-content">
+                <div class="nx-card">
+                    <div class="nx-profile-grid" id="profile-details">
+                        <div class="nx-muted">Loading profile…</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/nexus-app.js"></script>
+    <script>
+        nxRenderSidebar();
+        loadProfile();
+
+        async function loadProfile() {
+            try {
+                const response = await nxApiFetch('/user-profile-full');
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Failed to fetch profile');
+                displayProfile(data.profile);
+            } catch (error) {
+                document.getElementById('profile-details').innerHTML = `
+                    <div class="nx-detail-value" style="border-left-color:var(--nx-danger);">${error.message}</div>
+                `;
+            }
+        }
+
+        function displayProfile(profile) {
+            const fields = [
+                { label: 'Full Name', value: profile.name },
+                { label: 'Account Number', value: profile.account_number },
+                { label: 'Email', value: profile.email },
+                { label: 'Phone Number', value: profile.phone_no },
+                { label: 'Date of Birth', value: profile.dob ? new Date(profile.dob).toLocaleDateString() : '-' },
+                { label: 'Nationality', value: profile.nationality },
+                { label: 'Address', value: `${profile.address}, ${profile.city}, ${profile.state}` },
+                { label: 'Branch', value: profile.branch },
+                { label: 'Account Type', value: profile.account_type },
+                { label: 'IFSC Code', value: profile.ifsc_code },
+                { label: 'Currency', value: profile.currency },
+                { label: 'Balance', value: `₹${nxFormatCurrency(profile.balance)}` },
+            ];
+
+            document.getElementById('profile-details').innerHTML = fields.map(f => `
+                <div>
+                    <div class="nx-detail-label">${f.label}</div>
+                    <div class="nx-detail-value">${f.value ?? '-'}</div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>

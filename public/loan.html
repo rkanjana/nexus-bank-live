@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Offers - NEXUS Bank</title>
+    <link rel="stylesheet" href="css/loan.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            
+        </div>
+        <nav>
+            <ul>
+                <li><a href="test.html">Home</a></li>
+                <li><a href="#">Loan Offers</a></li>
+                <li><a href="#">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Explore Our Loan Offers</h1>
+        <p>Choose the best loan plan for your needs and calculate your interest instantly.</p>
+    </section>
+
+    <section class="loan-offers">
+        <div class="loan">
+            <h2>Personal Loan</h2>
+            <p>Interest Rate: <strong>10.5% per annum</strong></p>
+            <button class="apply-btn" onclick="window.location.href='userloginpage.html'">Apply Now</button>
+        </div>
+        <div class="loan">
+            <h2>Home Loan</h2>
+            <p>Interest Rate: <strong>8.2% per annum</strong></p>
+            <button class="apply-btn" onclick="window.location.href='userloginpage.html'">Apply Now</button>
+        </div>
+        <div class="loan">
+            <h2>Education Loan</h2>
+            <p>Interest Rate: <strong>7.5% per annum</strong></p>
+            <button class="apply-btn" onclick="window.location.href='userloginpage.html'">Apply Now</button>
+        </div>
+        <div class="loan">
+            <h2>Car Loan</h2>
+            <p>Interest Rate: <strong>9.0% per annum</strong></p>
+            <button class="apply-btn" onclick="window.location.href='userloginpage.html'">Apply Now</button>
+        </div>
+    </section>
+    
+
+    <section class="calculator">
+        <h2>Loan Interest Calculator</h2>
+        <div class="calc-container">
+            <label>Loan Amount (₹):</label>
+            <input type="number" id="amount" placeholder="Enter amount">
+
+            <label>Interest Rate (% per annum):</label>
+            <input type="number" id="rate" placeholder="Enter interest rate">
+
+            <label>Loan Tenure (Years):</label>
+            <input type="number" id="years" placeholder="Enter years">
+
+            <button onclick="calculateInterest()">Calculate</button>
+
+            <h3>Total Interest: <span id="interest"></span></h3>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 NEXUS Bank. All rights reserved.</p>
+    </footer>
+
+    <script src="js/loan.js"></script>
+</body>
+</html>

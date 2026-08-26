@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beneficiaries — NEXUS Bank</title>
+    <link rel="stylesheet" href="css/nexus-theme.css">
+</head>
+<body>
+    <div class="nx-app">
+        <aside class="nx-sidebar" id="nx-sidebar-mount"></aside>
+        <main class="nx-main">
+            <div class="nx-topbar"><h1>Beneficiaries</h1></div>
+            <div class="nx-content">
+                <div class="nx-card">
+                    <h3 class="nx-mt-0">Add a beneficiary</h3>
+                    <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end;">
+                        <div class="nx-field" style="flex:1; min-width:180px; margin-bottom:0;">
+                            <label for="benAccount">Account Number</label>
+                            <input type="text" id="benAccount" placeholder="e.g. 1234567890">
+                        </div>
+                        <div class="nx-field" style="flex:1; min-width:160px; margin-bottom:0;">
+                            <label for="benNickname">Nickname</label>
+                            <input type="text" id="benNickname" placeholder="e.g. Mom, Landlord">
+                        </div>
+                        <button class="nx-btn nx-btn-primary" id="addBenBtn" style="height:44px;">Add</button>
+                    </div>
+                    <div class="nx-alert" id="addMessage"></div>
+                </div>
+
+                <div class="nx-card">
+                    <h3 class="nx-mt-0">Saved beneficiaries</h3>
+                    <table class="nx-table">
+                        <thead><tr><th>Nickname</th><th>Account Number</th><th>Added</th><th></th></tr></thead>
+                        <tbody id="benTable"></tbody>
+                    </table>
+                    <div class="nx-empty-state" id="emptyState" style="display:none;">
+                        No beneficiaries yet — add one above to transfer faster next time.
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/nexus-app.js"></script>
+    <script>
+        nxRenderSidebar();
+        loadBeneficiaries();
+        document.getElementById('addBenBtn').addEventListener('click', addBeneficiary);
+
+        async function loadBeneficiaries() {
+            const response = await nxApiFetch('/beneficiaries');
+            const data = await response.json();
+            const tbody = document.getElementById('benTable');
+            tbody.innerHTML = '';
+
+            if (!data.beneficiaries || data.beneficiaries.length === 0) {
+                document.getElementById('emptyState').style.display = 'block';
+                return;
+            }
+            document.getElementById('emptyState').style.display = 'none';
+
+            data.beneficiaries.forEach(b => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${b.nickname}</td>
+                    <td>${b.beneficiary_account_number}</td>
+                    <td>${nxFormatDate(b.created_at)}</td>
+                    <td><button class="nx-btn nx-btn-outline" style="padding:6px 12px;" onclick="removeBeneficiary(${b.beneficiary_id})">Remove</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        async function addBeneficiary() {
+            const account = document.getElementById('benAccount').value.trim();
+            const nickname = document.getElementById('benNickname').value.trim();
+            const msgEl = document.getElementById('addMessage');
+            msgEl.className = 'nx-alert';
+
+            if (!account || !nickname) {
+                msgEl.textContent = 'Enter both an account number and a nickname';
+                msgEl.className = 'nx-alert nx-alert-error show';
+                return;
+            }
+
+            try {
+                const response = await nxApiFetch('/beneficiaries', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ beneficiary_account_number: account, nickname })
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Failed to add beneficiary');
+
+                msgEl.textContent = 'Beneficiary added';
+                msgEl.className = 'nx-alert nx-alert-success show';
+                document.getElementById('benAccount').value = '';
+                document.getElementById('benNickname').value = '';
+                loadBeneficiaries();
+            } catch (error) {
+                msgEl.textContent = error.message;
+                msgEl.className = 'nx-alert nx-alert-error show';
+            }
+        }
+
+        async function removeBeneficiary(id) {
+            if (!confirm('Remove this beneficiary?')) return;
+            await nxApiFetch(`/beneficiaries/${id}`, { method: 'DELETE' });
+            loadBeneficiaries();
+        }
+    </script>
+</body>
+</html>

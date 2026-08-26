@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — NEXUS Bank</title>
+    <link rel="stylesheet" href="css/nexus-theme.css">
+</head>
+<body>
+    <div class="nx-app">
+        <aside class="nx-sidebar" id="nx-sidebar-mount"></aside>
+
+        <main class="nx-main">
+            <div class="nx-topbar">
+                <h1 id="pageTitle">Dashboard</h1>
+                <div class="nx-muted" id="topbarAccount"></div>
+            </div>
+
+            <div class="nx-content">
+                <div class="nx-stat-grid">
+                    <div class="nx-stat-card">
+                        <div class="nx-stat-label">Available Balance</div>
+                        <div class="nx-stat-value">₹<span id="userBalance">…</span></div>
+                        <div class="nx-stat-sub" id="userAccountType">Savings Account</div>
+                    </div>
+                    <div class="nx-stat-card alt">
+                        <div class="nx-stat-label">Account Holder</div>
+                        <div class="nx-stat-value" style="font-size:20px;" id="userName">Loading…</div>
+                        <div class="nx-stat-sub" id="userEmail"></div>
+                    </div>
+                    <div class="nx-stat-card alt">
+                        <div class="nx-stat-label">Account Number</div>
+                        <div class="nx-stat-value" style="font-size:20px;" id="userAccountNumber">…</div>
+                        <div class="nx-stat-sub" id="userIfscCode"></div>
+                    </div>
+                </div>
+
+                <div class="nx-quick-actions">
+                    <div class="nx-quick-action" onclick="window.location.href='tranfer.html'">
+                        <span class="nx-qa-icon">💸</span> Transfer Money
+                    </div>
+                    <div class="nx-quick-action" onclick="window.location.href='beneficiaries.html'">
+                        <span class="nx-qa-icon">📇</span> Beneficiaries
+                    </div>
+                    <div class="nx-quick-action" onclick="window.location.href='fixed-deposits.html'">
+                        <span class="nx-qa-icon">🏦</span> Fixed Deposits
+                    </div>
+                    <div class="nx-quick-action" onclick="window.location.href='statement.html'">
+                        <span class="nx-qa-icon">📄</span> Full Statement
+                    </div>
+                    <div class="nx-quick-action" onclick="window.location.href='Accountdetails.html'">
+                        <span class="nx-qa-icon">👤</span> Profile
+                    </div>
+                </div>
+
+                <div class="nx-card">
+                    <div class="nx-flex-between" style="margin-bottom:14px;">
+                        <h3 class="nx-mt-0">Recent Transactions</h3>
+                        <a href="statement.html">View all →</a>
+                    </div>
+                    <table class="nx-table">
+                        <thead>
+                            <tr><th>Type</th><th>Amount</th><th>Date</th></tr>
+                        </thead>
+                        <tbody id="transactionTable"></tbody>
+                    </table>
+                    <div class="nx-empty-state" id="noTransactions" style="display:none;">No transactions yet.</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/nexus-app.js"></script>
+    <script>
+        nxRenderSidebar();
+        fetchUserProfile();
+
+        async function fetchUserProfile() {
+            try {
+                const response = await nxApiFetch(`/user-profile`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    alert(data.error || 'Failed to fetch profile');
+                    return;
+                }
+
+                const profile = data.profile;
+                document.getElementById("userName").innerText = profile.name;
+                document.getElementById("userEmail").innerText = profile.email;
+                document.getElementById("userAccountNumber").innerText = profile.account_number;
+                document.getElementById("topbarAccount").innerText = `A/C •••• ${String(profile.account_number).slice(-4)}`;
+                document.getElementById("userBalance").innerText = nxFormatCurrency(profile.balance);
+                document.getElementById("userAccountType").innerText = `${profile.account_type} Account`;
+                document.getElementById("userIfscCode").innerText = `IFSC: ${profile.ifsc_code}`;
+
+                const tableBody = document.getElementById("transactionTable");
+                const recent = profile.transactions.slice(0, 6);
+
+                if (recent.length === 0) {
+                    document.getElementById("noTransactions").style.display = "block";
+                } else {
+                    recent.forEach(t => {
+                        const row = document.createElement("tr");
+                        const badgeClass = t.transaction_type === 'Deposit' || t.transaction_type === 'FD Closure'
+                            ? 'nx-badge-success'
+                            : t.transaction_type === 'Withdraw' || t.transaction_type === 'FD Open'
+                            ? 'nx-badge-warning'
+                            : 'nx-badge-neutral';
+                        row.innerHTML = `
+                            <td><span class="nx-badge ${badgeClass}">${t.transaction_type}</span></td>
+                            <td>₹${nxFormatCurrency(t.transaction_amount)}</td>
+                            <td>${nxFormatDate(t.transaction_date)}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching profile:', error);
+            }
+        }
+    </script>
+</body>
+</html>

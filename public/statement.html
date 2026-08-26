@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statement — NEXUS Bank</title>
+    <link rel="stylesheet" href="css/nexus-theme.css">
+</head>
+<body>
+    <div class="nx-app">
+        <aside class="nx-sidebar" id="nx-sidebar-mount"></aside>
+        <main class="nx-main">
+            <div class="nx-topbar"><h1>Transaction Statement</h1></div>
+            <div class="nx-content">
+                <div class="nx-card">
+                    <table class="nx-table">
+                        <thead>
+                            <tr><th>Date</th><th>Type</th><th>Amount</th><th>Related Account</th></tr>
+                        </thead>
+                        <tbody id="statementTable"></tbody>
+                    </table>
+                    <div class="nx-empty-state" id="emptyState" style="display:none;">No transactions found.</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/nexus-app.js"></script>
+    <script>
+        nxRenderSidebar();
+        loadStatement();
+
+        async function loadStatement() {
+            try {
+                const response = await nxApiFetch('/statements');
+                const data = await response.json();
+                const tbody = document.getElementById('statementTable');
+
+                if (!data.transactions || data.transactions.length === 0) {
+                    document.getElementById('emptyState').style.display = 'block';
+                    return;
+                }
+
+                data.transactions.forEach(t => {
+                    const badgeClass = t.type === 'Deposit' || t.type === 'FD Closure'
+                        ? 'nx-badge-success'
+                        : t.type === 'Withdraw' || t.type === 'FD Open'
+                        ? 'nx-badge-warning'
+                        : 'nx-badge-neutral';
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${nxFormatDate(t.date)}</td>
+                        <td><span class="nx-badge ${badgeClass}">${t.type}</span></td>
+                        <td>₹${nxFormatCurrency(t.amount)}</td>
+                        <td>${t.receiver || '—'}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error loading statement:', error);
+            }
+        }
+    </script>
+</body>
+</html>
