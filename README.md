@@ -1,72 +1,120 @@
 # NEXUS Bank
 
-A full-stack online banking system: customer accounts, money transfers, fixed
-deposits, saved beneficiaries, and an employee/manager portal for deposits
-and leave management.
+NEXUS Bank is a full-stack online banking application that simulates core banking operations such as customer onboarding, account management, money transfers, beneficiaries, fixed deposits, and transaction statements.
 
-## Stack
+## 🌐 Live Demo
 
-- **Backend:** Node.js, Express, MySQL (`mysql2`), `express-session` for auth, `bcryptjs` for password hashing, Nodemailer for OTP/account emails
-- **Frontend:** Plain HTML/CSS/JS (no framework) — a shared design system in `public/css/nexus-theme.css` and a shared sidebar/session helper in `public/js/nexus-app.js`
-- **Database:** MySQL, schema in `SQL files/`
+**[NEXUS Bank – Live Application](https://nexus-bank-live-production-f31e.up.railway.app/)**
 
-## Features
+**[GitHub Repository](https://github.com/rkanjana/nexus-bank-live)**
 
-- Customer onboarding with email OTP verification, auto-generated account number
-- Session-based login (customer + employee), passwords hashed with bcrypt
-- Money transfer between accounts (row-locked, transactional)
-- Saved beneficiaries (payees) for faster repeat transfers
-- Fixed deposits with tenure-based interest rates and early-closure penalty
+## ✨ Features
+
+### Customer
+
+- Account registration with email OTP verification
+- Automatic account number generation
+- Secure login and session-based authentication
+- Profile management
+- Money transfers
+- Beneficiary management
+- Fixed deposits
 - Transaction statements
-- Employee portal: deposits, leave requests, manager approvals
 
-## Setup
+### Employee & Manager
+
+- Employee authentication
+- Employee operations and requests
+- Manager approval workflows
+
+## 🛠️ Tech Stack
+
+| Layer | Technologies |
+|---|---|
+| Frontend | HTML5, CSS3, JavaScript |
+| Backend | Node.js, Express.js |
+| Database | MySQL |
+| Authentication | Express Session, bcrypt |
+| Email / OTP | Resend API |
+| Deployment | Railway |
+
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    A[Client / Browser] --> B[Frontend<br/>HTML • CSS • JavaScript]
+    B --> C[Node.js + Express.js]
+    C --> D[(MySQL Database)]
+    C --> E[Resend API]
+    E --> F[OTP Email]
+```
+
+## 🔄 Application Flow
+
+```text
+Customer Registration
+        ↓
+Email OTP Verification
+        ↓
+Account Creation
+        ↓
+Customer Login
+        ↓
+Banking Dashboard
+   ┌────┼────────────┬──────────────┐
+   ↓    ↓            ↓              ↓
+Transfer  Beneficiaries  Fixed Deposits  Statements
+```
+
+## ⚙️ Local Setup
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/rkanjana/nexus-bank-live.git
+cd nexus-bank-live
+```
+
+### 2. Install dependencies
 
 ```bash
 npm install
-cp .env.example .env   # then fill in your own DB + email credentials
 ```
 
-Create an empty database named `company` locally, then run the app. On a fresh
-deployment, the application initializes its required tables automatically from
-`SQL files/schema.sql`.
+### 3. Configure environment variables
 
-```bash
-mysql -u root -p -e "CREATE DATABASE company;"
+Create a `.env` file using `.env.example` and configure the required database, Resend API, session, and application settings.
+
+### 4. Set up the database
+
+Create the required MySQL database and run the schema provided in:
+
+```text
+SQL files/schema.sql
 ```
 
-Run it:
+### 5. Start the application
 
 ```bash
 npm start
-# → http://localhost:3000/login.html
 ```
 
-## Security notes
+The application will run on the configured port.
 
-- `.env` is gitignored — never commit real credentials. If you're working from
-  a fork where a `.env` was committed in the past, **rotate those credentials**;
-  removing the file in a new commit does not erase it from git history.
-- Passwords are stored as bcrypt hashes. Any legacy plaintext row is
-  transparently upgraded to a hash the next time that user logs in.
-- Sensitive endpoints (profile, statements, transfers, deposits, beneficiaries,
-  fixed deposits, leave approvals) require a valid session — the server never
-  trusts a client-supplied account number for "whose data is this."
+> **Security:** API keys, database credentials, session secrets, and other sensitive configuration are stored using environment variables and are not committed to the repository.
 
-## Project structure
+## 🚀 Deployment
 
-```
-public/
-  css/nexus-theme.css   — shared design system (colors, cards, forms, tables)
-  js/nexus-app.js        — sidebar nav + session-aware fetch wrapper
-  useraccount.html        — customer dashboard
-  tranfer.html            — money transfer
-  beneficiaries.html      — saved payees
-  fixed-deposits.html     — fixed deposits
-  statement.html          — transaction history
-  Accountdetails.html     — profile
-  employeeloginpage.html, manager.html, timeoff.html, emplyeepage.html — staff portal
-server2.js                — Express app / all API routes
-  pool.js                   — MySQL connection-pool helper
-  SQL files/schema.sql       — clean, idempotent MySQL schema
-```
+The application is deployed on **Railway**.
+
+- **Application Hosting:** Railway
+- **Database:** MySQL
+- **OTP Delivery:** Resend API
+- **Configuration:** Environment variables
+
+## 📌 Future Improvements
+
+- Persistent OTP storage using Redis or a database
+- Production-ready session storage
+- Domain-based email sending
+- Expanded banking services such as loans and credit cards
